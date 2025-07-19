@@ -1,63 +1,106 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 
+namespace GeneralTreeExample
+{
+    public class TreeNode<T>
+    {
+        public T Value { get; set; }
+        public List<TreeNode<T>> Children { get; set; }
 
-public class TreeNode<T>
-{
-    public T value { get; set; }
-    public List<TreeNode<T>> childrens { get; set; }
-    public TreeNode(T value)
-    {
-        this.value = value;
-        childrens = new List<TreeNode<T>>();
-    }
-    public void addChild(TreeNode<T> node)
-    {
-        childrens.Add(node);
-    }
-}
-public class Tree<T>
-{
-    public TreeNode<T> root { get; private set; }
-    public Tree(T rootValue)
-    {
-        root = new TreeNode<T>(rootValue);
-    }
-    public void printTree(TreeNode<T> root, string indent = "-")
-    {
-        Console.WriteLine(indent + root.value);
-        foreach (var child in root.childrens)
+        public TreeNode(T value)
         {
-            printTree(child, "   " + indent);
+            this.Value = value;
+            Children = new List<TreeNode<T>>();
+        }
+
+        public void AddChild(TreeNode<T> child)
+        {
+            Children.Add(child);
+        }
+
+    }
+
+    public class Tree<T>
+    {
+        public TreeNode<T> Root { get; private set; }
+
+        public Tree(T rootValue)
+        {
+            Root = new TreeNode<T>(rootValue);
+        }
+        private static void PrintTree(TreeNode<T> node, string indent = " ")
+        {
+            Console.WriteLine(indent + node.Value);
+            foreach (var child in node.Children)
+            {
+                PrintTree(child, indent + "  ");
+            }
+        }
+        public void PrintTree(string indent = " ")
+        {
+            Console.WriteLine(indent + this.Root.Value);
+            foreach (var child in this.Root.Children)
+            {
+                PrintTree(child, indent + "  ");
+            }
+        }
+
+        private TreeNode<T> Find(TreeNode<T> root, T value)
+        {
+            if (root.Value.Equals(value)) return root;
+
+            foreach (var child in root.Children)
+            {
+                var found = Find(child, value);
+                if (found != null) return found;
+            }
+
+            return null;
+        }
+        public TreeNode<T> Find(T value)
+        {
+            return Find(this.Root, value);
         }
     }
-}
 
-class Program
-{
-    static void Main()
+    class Program
     {
-        var tree = new Tree<string>("algebra");
-        var polynomes = new TreeNode<string>("polynomes");
-        var inequalties = new TreeNode<string>("inequalties");
-        var fonctional_equations = new TreeNode<string>("fonctional_equations");
-        tree.root.addChild(polynomes);
-        tree.root.addChild(inequalties);
-        tree.root.addChild(fonctional_equations);
+        static void Main(string[] args)
+        {
+            // Creating the tree
+            var CompanyTree = new Tree<string>("CEO");
+            var Finance = new TreeNode<string>("CFO");
+            var Tech = new TreeNode<string>("CTO");
+            var Marketing = new TreeNode<string>("CMO");
 
-        // polynomes childs
-        var degree1 = new TreeNode<string>("firstDegreePolynome");
-        var degree2 = new TreeNode<string>("SecondDegreePolynome");
-        var degree3 = new TreeNode<string>("ThirdDegreePolynome");
-        polynomes.addChild(degree1);
-        polynomes.addChild(degree2);
-        polynomes.addChild(degree3);
-        // inequalties childs
-        var AM_GM = new TreeNode<string>("AM_GM_inequality");
-        inequalties.addChild(AM_GM);
+            // Adding departments to the CEO node
+            CompanyTree.Root.AddChild(Finance);
+            CompanyTree.Root.AddChild(Tech);
+            CompanyTree.Root.AddChild(Marketing);
 
-        tree.printTree(tree.root);
+            // Adding employees to departments
+            Finance.AddChild(new TreeNode<string>("Accountant"));
+            Tech.AddChild(new TreeNode<string>("Developer"));
+            Tech.AddChild(new TreeNode<string>("UX Designer"));
+            Marketing.AddChild(new TreeNode<string>("Social Media Manager"));
+
+            // Printing the tree
+            CompanyTree.PrintTree();
+
+            Console.WriteLine("\nFinding Developer...");
+            if (CompanyTree.Find("Developer") == null)
+                Console.WriteLine("Not Found :-(");
+            else
+                Console.WriteLine("Found :-)");
+
+            Console.WriteLine("\nFinding DBA...");
+            if (CompanyTree.Find("DBA") == null)
+                Console.WriteLine("Not Found :-(");
+            else
+                Console.WriteLine("Found :-)");
+
+            Console.ReadKey();
+        }
     }
 }
