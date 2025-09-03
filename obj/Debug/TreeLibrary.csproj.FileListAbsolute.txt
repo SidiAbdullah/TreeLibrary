@@ -1,0 +1,8 @@
+C:\all_my_projects\TreeLibrary\obj\Debug\TreeLibrary.csproj.AssemblyReference.cache
+C:\all_my_projects\TreeLibrary\obj\Debug\TreeLibrary.csproj.CoreCompileInputs.cache
+C:\all_my_projects\TreeLibrary\bin\Debug\TreeLibrary.exe.config
+C:\all_my_projects\TreeLibrary\bin\Debug\TreeLibrary.exe
+C:\all_my_projects\TreeLibrary\bin\Debug\TreeLibrary.pdb
+C:\all_my_projects\TreeLibrary\obj\Debug\TreeLibrary.exe
+C:\all_my_projects\TreeLibrary\obj\Debug\TreeLibrary.pdb
+C:\all_my_projects\TreeLibrary\obj\Debug\TreeLibrary.exe.config

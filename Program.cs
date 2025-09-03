@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace BinaryTreeImplementation
 {
-    public class BinaryTreeNode<T>
+    public class BinaryTreeNode<T> where T : IComparable<T>
     {
         public T Value { get; set; }
         public BinaryTreeNode<T> Left { get; set; }
@@ -17,7 +17,7 @@ namespace BinaryTreeImplementation
         }
     }
 
-    public class BinaryTree<T>
+    public class BinaryTree<T> where T : IComparable<T>
     {
         public BinaryTreeNode<T> Root { get; private set; }
 
@@ -65,6 +65,29 @@ namespace BinaryTreeImplementation
                     queue.Enqueue(current.Right);
                 }
             }
+        }
+
+        public void Insert_BST(T value)
+        {
+            Root = Insert_BST(Root, value);
+        }
+
+        private BinaryTreeNode<T> Insert_BST(BinaryTreeNode<T> node, T value)
+        {
+            if (node == null)
+            {
+                return new BinaryTreeNode<T>(value);
+            }
+            else if (value.CompareTo(node.Value) < 0)
+            {
+                node.Left = Insert_BST(node.Left, value);
+            }
+            else if (value.CompareTo(node.Value) > 0)
+            {
+                node.Right = Insert_BST(node.Right, value);
+            }
+
+            return node;
         }
 
         // Print the tree visually
@@ -179,8 +202,33 @@ namespace BinaryTreeImplementation
                 }
             }
         }
-    }
+        
+        // Search
+        public bool search_BST(T value)
+        {
+            return search_BST(Root, value);
+        }
+        private bool search_BST(BinaryTreeNode<T> node, T value)
+        {
+            while (node != null)
+            {
+                if (value.CompareTo(node.Value) == 0)
+                {
+                    return true;
+                }
+                else if (value.CompareTo(node.Value) < 0)
+                {
+                    node = node.Left;
+                }
+                else
+                {
+                    node = node.Right;
+                }
+            }
+            return false;
+        }
 
+    }
     class Program
     {
         static void Main(string[] args)
@@ -188,13 +236,13 @@ namespace BinaryTreeImplementation
             var binaryTree = new BinaryTree<int>();
             Console.WriteLine("Values to be inserted: 5,3,8,1,4,6,9\n");
 
-            binaryTree.Insert(5);
-            binaryTree.Insert(3);
-            binaryTree.Insert(8);
-            binaryTree.Insert(1);
-            binaryTree.Insert(4);
-            binaryTree.Insert(6);
-            binaryTree.Insert(9);
+            binaryTree.Insert_BST(5);
+            binaryTree.Insert_BST(3);
+            binaryTree.Insert_BST(8);
+            binaryTree.Insert_BST(1);
+            binaryTree.Insert_BST(4);
+            binaryTree.Insert_BST(6);
+            binaryTree.Insert_BST(9);
 
             binaryTree.PrintTree();
 
@@ -206,8 +254,12 @@ namespace BinaryTreeImplementation
 
             Console.WriteLine("\nInorder Traversal: Left-Current-Right");
             binaryTree.InOrderTraversal();
+
             Console.WriteLine("\nLevel-order Traversal");
             binaryTree.LevelOrderTraversal();
+
+
+            Console.WriteLine("\nDoes the BST contains 10 : " + binaryTree.search_BST(10));
         }
     }
 }
